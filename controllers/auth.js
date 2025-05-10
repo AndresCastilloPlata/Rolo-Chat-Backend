@@ -7,9 +7,9 @@ const usuario = require('../models/usuario');
 
 const crearUsuario = async (req, res = response) => {
 
-    const { email } = req.body;
+    const { email, password } = req.body;
     try {
-        const existeEmail = await Usuario.find({ email });
+        const existeEmail = await Usuario.findOne({ email });
         if (existeEmail > 0){
             return res.status(400).json({
                 ok: false,
@@ -21,7 +21,7 @@ const crearUsuario = async (req, res = response) => {
 
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        usuario.password = bcrypt.hashSync(usuario.password, salt);
+        usuario.password = bcrypt.hashSync(password, salt);
 
         await usuario.save();
 
@@ -44,7 +44,7 @@ const crearUsuario = async (req, res = response) => {
 }
 
 
-const login = async (req, res = respones) => {
+const login = async (req, res = response) => {
     const { email, password} = req.body;
     try {
         // Verificar email
